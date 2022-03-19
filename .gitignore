@@ -1,5 +1,5 @@
 *.js
-!src/lambda-code/*/*.js
+!src/serverless/*/*.js
 !jest.config.js
 *.d.ts
 node_modules
