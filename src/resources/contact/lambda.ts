@@ -9,7 +9,7 @@ export function createLambdaContact(
 ): lambda.Function {
   const lambdaName = `contact`;
   const memorySize = parseInt(
-    `${config.get('infrastructure.services.lambda.contact.memorySize')}`,
+    `${config.get('resources.lambda.contact.memorySize')}`,
   );
 
   const handler = new lambda.Function(scope, lambdaName, {

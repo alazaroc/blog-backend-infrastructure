@@ -14,7 +14,7 @@ export function createLambdaComment(
 ): lambda.Function {
   const lambdaName = `comment`;
   const memorySize = parseInt(
-    `${config.get('infrastructure.services.lambda.comment.memorySize')}`,
+    `${config.get('resources.lambda.comment.memorySize')}`,
   );
 
   const handler = new lambda.Function(scope, lambdaName, {

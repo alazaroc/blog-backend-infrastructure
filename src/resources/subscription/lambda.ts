@@ -14,7 +14,7 @@ export function createLambdaSubscription(
 ): lambda.Function {
   const lambdaName = `subscription`;
   const memorySize = parseInt(
-    `${config.get('infrastructure.services.lambda.subscription.memorySize')}`,
+    `${config.get('resources.lambda.subscription.memorySize')}`,
   );
 
   const handler = new lambda.Function(scope, lambdaName, {

@@ -1,13 +1,12 @@
-infrastructure:
-  app-description: AWS resources related with my personal blog
-  environment: prd
-  services:
-    ssm:
-      personalEmail: personal-email
-    lambda:
-      contact:
-        memorySize: 128
-      subscription:
-        memorySize: 128
-      comment:
-        memorySize: 128
+description: AWS resources related with my personal blog
+environment: prd
+resources:
+  ssm:
+    personalEmail: personal-email
+  lambda:
+    contact:
+      memorySize: 128
+    subscription:
+      memorySize: 128
+    comment:
+      memorySize: 128

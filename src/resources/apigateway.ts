@@ -16,7 +16,7 @@ export function createPublicApiGateway(scope: Construct): apigateway.RestApi {
     },
     retainDeployments: true,
     deployOptions: {
-      stageName: `${config.get('infrastructure.environment')}`, // default "prod"
+      stageName: `${config.get('environment')}`, // default "prod"
       loggingLevel: apigateway.MethodLoggingLevel.ERROR, // Default OFF
       dataTraceEnabled: false,
       metricsEnabled: false,

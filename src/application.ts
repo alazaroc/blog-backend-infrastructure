@@ -23,22 +23,7 @@ import { createTopicMyNotification } from './resources/sns';
 import { createLambdaSubscription } from './resources/subscription/lambda';
 import { createRoleToLambdaSubscription } from './resources/subscription/role';
 
-/**
- * Class that includes the Infrastructure generation for this application.
- *.
- *
- * @export
- * @class ApplicationCdkStack
- */
-export class SetUpAccountStack extends Stack {
-  /**
-   * Creates an instance of ApplicationCdkStack.
-   *
-   * @param {cdk.Stack} scope
-   * @param {string} id
-   * @param {cdk.StackProps} props
-   * @memberof ApplicationCdkStack
-   */
+export class BlogInfrastructureStack extends Stack {
   public constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -105,7 +90,7 @@ export class SetUpAccountStack extends Stack {
 // Create app
 const app = new App();
 const stackName = `blog-infrastructure`;
-new SetUpAccountStack(app, stackName, {
+new BlogInfrastructureStack(app, stackName, {
   description: 'Infrastructure created for web blog',
   env: {
     account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
@@ -114,4 +99,4 @@ new SetUpAccountStack(app, stackName, {
 });
 
 // Create tags for all resources supported
-// EACdkTags.createTags(app);
+// CdkTags.create(app);
