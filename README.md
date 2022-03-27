@@ -1,7 +1,12 @@
 # Blog-infrastructure
 
-This is the public infrastructure code of my [blog](https://www.playingaws.com/)
+This is the public infrastructure code of my [blog](https://www.playingaws.com/).
 
-I have explained the technology behind the blog in this [post](https://www.playingaws.com/posts/the-technology-behind-this-blog/)
+Architecture diagram:
+![architecture-diagram](diagram.png)
 
-I have explained how to deploy this infrastructure in this [post](https://www.playingaws.com/posts/how-to-deploy-infrastructure-with-cdk/)
+More information:
+
+- Technology behind the blog [here](https://www.playingaws.com/posts/the-technology-behind-this-blog/).
+- How to create this infrastructure [here](https://www.playingaws.com/posts/how-to-create-infrastructure-with-cdk/).
+- How to add CI/CD to my CDK project [here](https://www.playingaws.com/posts/how-to-add-ci-cd-to-my-cdk-project/).
