@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable */
 /* eslint-disable no-undef */
 const AWS = require('aws-sdk');
 const SES = new AWS.SES();
@@ -21,7 +21,7 @@ function sendEmail(formData, callback) {
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: 'New contact message from playingaws.com',
+        Data: 'New contact message from my web: playingaws',
       },
     },
   };
@@ -30,22 +30,27 @@ function sendEmail(formData, callback) {
 }
 
 exports.handler = (event, context, callback) => {
-  const formData = JSON.parse(event.body);
+  console.log('request:', JSON.stringify(event, undefined, 2));
 
-  sendEmail(formData, function (err, data) {
-    const response = {
-      statusCode: err ? 500 : 200,
-      headers: {
-        'Content-Type': 'application/json',
-        // Only will be used by MY DOMAIN
-        'Access-Control-Allow-Origin': 'https://www.playingaws.com', // Required for CORS support to work
-        'Access-Control-Allow-Credentials': false, // Required for cookies, authorization headers with HTTPS
-      },
-      body: JSON.stringify({
-        message: err ? err.message : data,
-      }),
-    };
-    console.log(response);
-    callback(null, response);
-  });
+  try {
+    const formData = JSON.parse(event.body);
+    sendEmail(formData, function (err, data) {
+      const response = {
+        statusCode: err ? 500 : 200,
+        headers: {
+          'Content-Type': 'application/json',
+          // Only will be used by MY DOMAIN
+          'Access-Control-Allow-Origin': 'https://www.playingaws.com', // Required for CORS support to work
+          'Access-Control-Allow-Credentials': false, // Required for cookies, authorization headers with HTTPS
+        },
+        body: JSON.stringify({
+          message: err ? err.message : data,
+        }),
+      };
+      console.log(`response: ${JSON.stringify(response)}`);
+      callback(null, response);
+    });
+  } catch (error) {
+    throw new Error(error.toString());
+  }
 };
