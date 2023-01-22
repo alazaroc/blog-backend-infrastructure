@@ -4,6 +4,7 @@ import {
   Duration,
   aws_iam as iam,
   aws_dynamodb as dynamodb,
+  aws_logs as logs,
 } from 'aws-cdk-lib';
 import config from 'config';
 
@@ -30,7 +31,7 @@ export function createLambdaComment(
     environment: {
       TABLE_COMMENTS: commentsTable.tableName,
     },
-    //logRetention: 7,
+    logRetention: logs.RetentionDays.INFINITE,
     retryAttempts: 0, // No async exec
   });
   return handler;

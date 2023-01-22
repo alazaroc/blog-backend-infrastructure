@@ -1,5 +1,10 @@
 import { Construct } from 'constructs';
-import { aws_lambda as lambda, Duration, aws_iam as iam } from 'aws-cdk-lib';
+import {
+  aws_lambda as lambda,
+  Duration,
+  aws_iam as iam,
+  aws_logs as logs,
+} from 'aws-cdk-lib';
 import config from 'config';
 import { getSsmPersonalEmail } from '../ssm';
 
@@ -24,7 +29,7 @@ export function createLambdaContact(
     environment: {
       EMAIL: getSsmPersonalEmail(scope),
     },
-    //logRetention: 7,
+    logRetention: logs.RetentionDays.INFINITE,
     retryAttempts: 0, // No async exec
   });
   return handler;
