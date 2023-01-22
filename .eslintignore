@@ -1,4 +1,21 @@
+###########
+# Modules #
+###########
 node_modules
+**/__mocks__
+
+###################
+# Generated files #
+###################
 dist/
-cdk.out/
 *.d.ts
+
+##################
+# COVERAGE Files #
+##################
+coverage
+
+################
+# Custom rules #
+################
+cdk.out/
