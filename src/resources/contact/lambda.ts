@@ -24,7 +24,7 @@ export function createLambdaContact(
     environment: {
       EMAIL: getSsmPersonalEmail(scope),
     },
-    logRetention: 7,
+    //logRetention: 7,
     retryAttempts: 0, // No async exec
   });
   return handler;

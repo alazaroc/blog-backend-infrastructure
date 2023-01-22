@@ -33,7 +33,7 @@ export function createLambdaSubscription(
     environment: {
       TABLE_SUBSCRIPTIONS: subscriptionsTable.tableName,
     },
-    logRetention: 7,
+    //logRetention: 7,
     retryAttempts: 0, // No async exec
   });
   return handler;
