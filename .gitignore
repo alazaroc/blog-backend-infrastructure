@@ -1,9 +1,13 @@
 *.js
-!src/serverless/*/*.js
+!**/runtime/*/*.js
 !jest.config.js
-*.d.ts
-node_modules
 
-# CDK asset staging directory
-.cdk.staging
+*.d.ts
+*.txt
+
+node_modules
 cdk.out
+coverage
+
+diagram.dot
+template.yml
