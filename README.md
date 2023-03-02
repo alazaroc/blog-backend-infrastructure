@@ -5,6 +5,19 @@ This is the public infrastructure code of my [blog](https://www.playingaws.com/)
 Architecture diagram:
 ![architecture-diagram](diagram.png)
 
+CDK project with 2 stacks:
+
+- Backend:
+  - API Gateway using custom domain
+  - Lambdas
+  - DynamoDB
+  - CloudWatch: lambda alarm and dashboard of lambdas
+- CICD:
+  - CodePipeline with 2 stages
+    - source: CodeCommit with GitHub
+    - build: CodeBuild (executes terraform apply)
+  - S3 (as artifactory in CodePipeline)
+
 ## Review QA
 
 ```npm run lint && npm run test```

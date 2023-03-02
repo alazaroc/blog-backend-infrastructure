@@ -4,7 +4,7 @@ environment: prd
 resources:
   ssm:
     personalEmail: personal-email
-    gitHubRepository: github-connection-alazaroc-infrastructure
+    gitHubRepository: connection-github-alazaroc
   lambda:
     contact:
       memorySize: 128
@@ -14,3 +14,5 @@ resources:
       memorySize: 128
   acm:
     webArn: arn:aws:acm:us-east-1:139415085530:certificate/ffd3a024-58a7-4508-883c-90e17f034578
+  s3:
+    cicd: cicd-139415085530-eu-west-1
