@@ -27,8 +27,9 @@ export function createPublicApiGateway(
       dataTraceEnabled: false,
       metricsEnabled: true,
       tracingEnabled: false, // TODO: not enabled in Spain region yet
-      cachingEnabled: true,
-      cacheDataEncrypted: true,
+      cacheClusterEnabled: false,
+      cachingEnabled: false, // 14.88 $ per month
+      cacheDataEncrypted: false,
     },
     domainName: {
       domainName: 'api.playingaws.com',
