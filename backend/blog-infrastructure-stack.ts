@@ -14,7 +14,7 @@ import {
   createLambdaAlarm,
 } from './monitoring/cloudwatch';
 import { createLambdaContact } from './api/infrastructure/contact/lambda';
-import { createPolicyToSesSendMail } from './api/infrastructure/contact/policy';
+import { createPolicyToSesSendEmail } from './api/infrastructure/contact/policy';
 import { createRoleToLambdaContact } from './api/infrastructure/contact/role';
 import {
   createTableContact,
@@ -40,10 +40,10 @@ export class BlogInfrastructureStack extends Stack {
     const topicMyNotification = createTopicMyNotification(this);
 
     // Lambda contact
-    const policyToSesSendMail = createPolicyToSesSendMail(this);
+    const policyToSesSendEmail = createPolicyToSesSendEmail(this);
     const roleToLambdaContact = createRoleToLambdaContact(
       this,
-      policyToSesSendMail,
+      policyToSesSendEmail,
     );
     const lambdaContact = createLambdaContact(
       this,
