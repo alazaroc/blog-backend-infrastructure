@@ -33,18 +33,19 @@ export function createCodePipeline(scope: Construct): void {
   // const buildOutput = new codepipeline.Artifact();
   const buildProject = new codebuild.PipelineProject(scope, name, {
     projectName: name + '-build',
-    // buildSpec: codebuild.BuildSpec.fromAsset('my-buildspec.yml'),
     buildSpec: codebuild.BuildSpec.fromObject({
       version: '0.2',
       phases: {
         build: {
-          commands: ['npm ci', 'npx cdk deploy blog-infrastructure'],
+          commands: [
+            'npm ci',
+            'npx cdk deploy blog-infrastructure --require-approval never',
+          ],
         },
       },
       artifacts: {
         files: ['**/*'],
       },
-      // ...
     }),
     description: 'Build phase for blog-infrastructure resources',
     environment: {
