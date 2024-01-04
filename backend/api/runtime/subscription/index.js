@@ -24,6 +24,7 @@ function validateInput(formData) {
 }
 
 function getSubscriptionItem(formData) {
+  console.log(formData.email);
   return {
     email: { S: formData.email },
     id: { S: crypto.randomUUID() },
@@ -59,6 +60,9 @@ async function addSubscriptionToDB(formData) {
   return dbClient.send(new PutItemCommand(params));
 }
 
+////////////////////////////////
+// MAIN FUNCTION
+////////////////////////////////
 handler = async (event) => {
   try {
     const formData = JSON.parse(event.body);

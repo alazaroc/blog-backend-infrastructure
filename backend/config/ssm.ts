@@ -11,3 +11,15 @@ export function getSsmPersonalEmail(scope: Construct): string {
   );
   return personalEmailValue;
 }
+
+// Get blogCertificateArn config value
+export function getSsmBlogCertificateArn(scope: Construct): string {
+  const blogCertificateArnParam = `${config.get(
+    'resources.ssm.blogCertificateArn',
+  )}`;
+  const blogCertificateArnValue = ssm.StringParameter.valueForStringParameter(
+    scope,
+    blogCertificateArnParam,
+  );
+  return blogCertificateArnValue;
+}

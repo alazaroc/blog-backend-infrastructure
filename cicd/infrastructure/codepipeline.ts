@@ -7,13 +7,18 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { getMyGitHubConnectionFromSsmParameterStore } from '../config/ssm';
 import config from 'config';
 
-export function createCodePipeline(scope: Construct): void {
+export function createCodePipeline(
+  scope: Construct,
+  account: string,
+  region: string,
+): void {
   const name = `${config.get('name')}`;
+
   // Create an S3 bucket to store pipeline artifacts
   const artifactBucket = s3.Bucket.fromBucketName(
     scope,
     'cicdBucket',
-    `${config.get('resources.s3.cicd')}`,
+    `${config.get('resources.s3.cicd')}-${account}-${region}`,
   );
 
   // Create the source action
@@ -23,7 +28,7 @@ export function createCodePipeline(scope: Construct): void {
       actionName: 'Source',
       connectionArn: getMyGitHubConnectionFromSsmParameterStore(scope),
       owner: 'alazaroc',
-      repo: 'blog-infrastructure',
+      repo: 'blog-backend-infrastructure',
       branch: 'main',
       output: sourceOutput,
     },
@@ -39,7 +44,7 @@ export function createCodePipeline(scope: Construct): void {
         build: {
           commands: [
             'npm ci',
-            'npx cdk deploy blog-infrastructure --require-approval never',
+            'npx cdk deploy blog-backend-infrastructure --require-approval never',
           ],
         },
       },
@@ -47,7 +52,7 @@ export function createCodePipeline(scope: Construct): void {
         files: ['**/*'],
       },
     }),
-    description: 'Build phase for blog-infrastructure resources',
+    description: 'Build phase for blog-backend-infrastructure resources',
     environment: {
       computeType: codebuild.ComputeType.SMALL,
       buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_4,

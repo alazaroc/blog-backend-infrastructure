@@ -38,7 +38,7 @@ export function createLambdaContact(
     },
     logRetention: logs.RetentionDays.INFINITE,
     retryAttempts: 0, // No async exec
-    tracing: Tracing.DISABLED, // TODO: not enabled in Spain region yet
+    tracing: Tracing.ACTIVE,
   });
   return handler;
 }

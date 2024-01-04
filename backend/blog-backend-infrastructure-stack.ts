@@ -1,9 +1,4 @@
-import {
-  App,
-  Stack,
-  StackProps,
-  aws_certificatemanager as acm,
-} from 'aws-cdk-lib';
+import { App, Stack, StackProps, Tags } from 'aws-cdk-lib';
 import {
   addContactResource,
   addSubscriptionResource,
@@ -23,11 +18,17 @@ import {
 import { createTopicMyNotification } from './monitoring/sns';
 import { createLambdaSubscription } from './api/infrastructure/subscription/lambda';
 import { createRoleToLambdaSubscription } from './api/infrastructure/subscription/role';
-import config from 'config';
+import { loadCertificateResource } from './api/infrastructure/acm';
 
 export class BlogInfrastructureStack extends Stack {
   public constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    // Set custom tags
+    if (props?.tags) {
+      for (const [key, value] of Object.entries(props.tags))
+        Tags.of(this).add(key, value);
+    }
 
     // const accountRegion = this.region;
     // const accountNumber = this.account;
@@ -76,12 +77,8 @@ export class BlogInfrastructureStack extends Stack {
     // Create dashboard
     createDashboardOfLambdas(this, lambdas);
 
-    // Load certificate
-    const certificate = acm.Certificate.fromCertificateArn(
-      this,
-      'Certificate',
-      `${config.get('resources.acm.webArn')}`,
-    );
+    // Create certificate
+    const certificate = loadCertificateResource(this);
 
     // API Gateway
     const apiRestPublicNetwork = createPublicApiGateway(this, certificate);

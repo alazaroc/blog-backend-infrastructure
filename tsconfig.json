@@ -23,7 +23,6 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "allowJs": true
   },
   "exclude": [
     "node_modules",

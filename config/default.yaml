@@ -1,10 +1,12 @@
-name: blog-infrastructure
+name: blog-backend-infrastructure
 description: AWS resources related with my personal blog
 environment: prd
+gitRepository: https://github.com/alazaroc/blog-backend-infrastructure
 resources:
   ssm:
     personalEmail: personal-email
     gitHubRepository: connection-github-alazaroc
+    blogCertificateArn: /blog/certificate-arn
   lambda:
     contact:
       memorySize: 128
@@ -12,7 +14,5 @@ resources:
       memorySize: 128
     comment:
       memorySize: 128
-  acm:
-    webArn: arn:aws:acm:us-east-1:139415085530:certificate/ffd3a024-58a7-4508-883c-90e17f034578
   s3:
-    cicd: cicd-139415085530-eu-west-1
+    cicd: codepipeline-artifact

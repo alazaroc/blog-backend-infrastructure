@@ -4,6 +4,7 @@ import {
   aws_lambda as lambda,
   aws_certificatemanager as acm,
   aws_route53 as route53,
+  aws_iam as iam,
 } from 'aws-cdk-lib';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import config from 'config';
@@ -17,8 +18,9 @@ export function createPublicApiGateway(
     restApiName: apiName,
     description: 'API REST of blog',
     defaultCorsPreflightOptions: {
-      allowOrigins: ['https://www.playingaws.com'],
-      allowMethods: ['POST'],
+      allowOrigins: apigateway.Cors.ALL_ORIGINS,
+      allowMethods: apigateway.Cors.ALL_METHODS,
+      // allowMethods: ['POST'],
     },
     retainDeployments: true,
     deployOptions: {
@@ -26,7 +28,7 @@ export function createPublicApiGateway(
       loggingLevel: apigateway.MethodLoggingLevel.ERROR, // Default OFF
       dataTraceEnabled: false,
       metricsEnabled: true,
-      tracingEnabled: false, // TODO: not enabled in Spain region yet
+      tracingEnabled: true,
       cacheClusterEnabled: false,
       cachingEnabled: false, // 14.88 $ per month
       cacheDataEncrypted: false,
@@ -38,6 +40,7 @@ export function createPublicApiGateway(
       securityPolicy: apigateway.SecurityPolicy.TLS_1_2,
       basePath: '*',
     },
+    policy: createResourcePolicy(),
   });
   // Create Route53 record for API Custom Domain
   createRoute53Record(scope, apiRest);
@@ -93,5 +96,32 @@ export function createRoute53Record(
     zone: myHostedZone,
     recordName: 'api',
     target: route53.RecordTarget.fromAlias(new targets.ApiGateway(api)),
+  });
+}
+
+// add resource policy for the api gateway
+export function createResourcePolicy(): iam.PolicyDocument {
+  return new iam.PolicyDocument({
+    statements: [
+      new iam.PolicyStatement({
+        actions: ['execute-api:Invoke'],
+        principals: [new iam.AnyPrincipal()],
+        resources: ['execute-api:/*/*/*'],
+      }),
+      new iam.PolicyStatement({
+        effect: iam.Effect.DENY,
+        principals: [new iam.AnyPrincipal()],
+        actions: ['execute-api:Invoke'],
+        resources: ['execute-api:/*/*/*'],
+        conditions: {
+          StringLike: {
+            'aws:Referer': [
+              'https://www.playingaws.com',
+              'https://www.playingaws.com/*',
+            ],
+          },
+        },
+      }),
+    ],
   });
 }
