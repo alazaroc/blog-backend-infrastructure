@@ -40,7 +40,7 @@ Public code
 
 ### Review QA
 
-``` console
+```shell
 npm run lint && npm run test
 ```
 
@@ -48,40 +48,40 @@ npm run lint && npm run test
 
 1. Download and run docker image of dynamodb-local
 
-``` console
+```shell
 docker pull amazon/dynamodb-local
 docker run -p 8000:8000 amazon/dynamodb-local
 ```
 
 2. Create dynamodb-local tables - review the template.yaml because the ID is going to change
 
-``` console
+```shell
 aws dynamodb create-table --table-name bloginfrastructuresubscriptiondbF44CF6DE --attribute-definitions AttributeName=email,AttributeType=S --key-schema AttributeName=email,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
 aws dynamodb create-table --table-name bloginfrastructurecontactdbA1E13C61 --attribute-definitions AttributeName=name,AttributeType=S --key-schema AttributeName=name,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
 ```
 
 3. Update lambda code to change the endpoint:
 
-``` console
+```shell
 const dbClient = process.env.AWS_SAM_LOCAL ? new DynamoDBClient({ endpoint: 'http://docker.for.mac.localhost:8000/', }) : new DynamoDBClient();
 ```
 
 4. Generate the YAML file that SAM needs
 
-``` console
+```shell
 cdk synth blog-backend-infrastructure --no-staging > template.yml
 ```
 
 5. Run SAM tests
 
-``` console
+```shell
 sam local invoke blog-backend-infrastructure-contact-lbd -e tests/events/contact.json
 sam local invoke blog-backend-infrastructure-subscription-lbd -e tests/events/subscription.json
 ```
 
 6. Review database records
 
-``` console
+```shell
 aws dynamodb scan --table-name bloginfrastructuresubscriptiondbF44CF6DE --endpoint-url http://localhost:8000
 aws dynamodb scan --table-name bloginfrastructurecontactdbA1E13C61 --endpoint-url http://localhost:8000
 ```

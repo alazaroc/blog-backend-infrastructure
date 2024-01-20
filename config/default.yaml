@@ -4,8 +4,10 @@ environment: prd
 gitRepository: https://github.com/alazaroc/blog-backend-infrastructure
 resources:
   ssm:
-    personalEmail: personal-email
-    gitHubRepository: connection-github-alazaroc
+    personalEmail: /general/data/personal-email
+    gitHubRepository: /general/codestar/github-connect
+    snsFinalNotifications: /general/sns/final-notifications
+    snsFormatPipeline: /general/sns/format-codepipeline
     blogCertificateArn: /blog/certificate-arn
   lambda:
     contact:

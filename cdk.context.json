@@ -2,5 +2,9 @@
   "hosted-zone:account=852439566690:domainName=playingaws.com:region=eu-west-1": {
     "Id": "/hostedzone/Z0091261FZ2KKLXBC2Y",
     "Name": "playingaws.com."
+  },
+  "hosted-zone:account=139415085530:domainName=playingaws.com:region=eu-west-1": {
+    "Id": "/hostedzone/Z03676962OIO2A4Z01VON",
+    "Name": "playingaws.com."
   }
 }

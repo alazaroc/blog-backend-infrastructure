@@ -15,10 +15,10 @@ import {
   createTableContact,
   createTableSubscriptions,
 } from './database/dynamodb';
-import { createTopicMyNotification } from './monitoring/sns';
 import { createLambdaSubscription } from './api/infrastructure/subscription/lambda';
 import { createRoleToLambdaSubscription } from './api/infrastructure/subscription/role';
 import { loadCertificateResource } from './api/infrastructure/acm';
+import { retrieveTopicMyNotification } from './monitoring/sns';
 
 export class BlogInfrastructureStack extends Stack {
   public constructor(scope: App, id: string, props?: StackProps) {
@@ -38,7 +38,7 @@ export class BlogInfrastructureStack extends Stack {
     const tableContact = createTableContact(this);
 
     // Create SNS topic to notify myself
-    const topicMyNotification = createTopicMyNotification(this);
+    const topicMyNotification = retrieveTopicMyNotification(this);
 
     // Lambda contact
     const policyToSesSendEmail = createPolicyToSesSendEmail(this);

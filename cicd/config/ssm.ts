@@ -9,3 +9,22 @@ export function getMyGitHubConnectionFromSsmParameterStore(
   const gitHubRepository = `${config.get('resources.ssm.gitHubRepository')}`;
   return ssm.StringParameter.valueForStringParameter(scope, gitHubRepository);
 }
+
+export function getSnsTopicFinalNotificationsFromSsmParameterStore(
+  scope: Construct,
+): string {
+  const snsFinalNotifications = `${config.get(
+    'resources.ssm.snsFinalNotifications',
+  )}`;
+  return ssm.StringParameter.valueForStringParameter(
+    scope,
+    snsFinalNotifications,
+  );
+}
+
+export function getSnsTopicFormatPipelineFromSsmParameterStore(
+  scope: Construct,
+): string {
+  const snsFormatPipeline = `${config.get('resources.ssm.snsFormatPipeline')}`;
+  return ssm.StringParameter.valueForStringParameter(scope, snsFormatPipeline);
+}

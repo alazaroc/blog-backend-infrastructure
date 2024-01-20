@@ -14,8 +14,8 @@ describe('Validate Api Gateway', () => {
         env: {
           account:
             process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
-          region:
-            process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
+          // region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
+          region: 'eu-west-1',
         },
       },
     );
@@ -37,8 +37,7 @@ describe('Validate Api Gateway', () => {
           account:
             process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
           // region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
-          region:
-            process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
+          region: 'eu-west-1',
         },
       },
     );
@@ -61,8 +60,7 @@ describe('Validate Api Gateway', () => {
           account:
             process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
           // region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
-          region:
-            process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
+          region: 'eu-west-1',
         },
       },
     );

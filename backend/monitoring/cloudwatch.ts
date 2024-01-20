@@ -20,7 +20,7 @@ export function createLambdaAlarm(
   scope: Construct,
   lambdaName: string,
   lambdaResource: lambda.Function,
-  snsTopic: sns.Topic,
+  snsTopic: sns.ITopic,
 ): void {
   const alarmName = `${lambdaName}-lbd`;
   const alarm = new Alarm(scope, alarmName + '-alarm', {

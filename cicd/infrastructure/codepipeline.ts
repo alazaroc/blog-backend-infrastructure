@@ -4,8 +4,12 @@ import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
-import { getMyGitHubConnectionFromSsmParameterStore } from '../config/ssm';
+import {
+  getMyGitHubConnectionFromSsmParameterStore,
+  getSnsTopicFormatPipelineFromSsmParameterStore,
+} from '../config/ssm';
 import config from 'config';
+import * as codestarnotifications from 'aws-cdk-lib/aws-codestarnotifications';
 
 export function createCodePipeline(
   scope: Construct,
@@ -82,7 +86,7 @@ export function createCodePipeline(
   });
 
   // Create the pipeline
-  new codepipeline.Pipeline(scope, name + '-pipeline', {
+  const pipeline = new codepipeline.Pipeline(scope, name + '-pipeline', {
     pipelineName: name,
     stages: [
       {
@@ -96,5 +100,25 @@ export function createCodePipeline(
     ],
     artifactBucket,
     restartExecutionOnUpdate: true,
+  });
+
+  // Create a CodeStar Notification Rule
+  new codestarnotifications.CfnNotificationRule(scope, 'MyNotificationRule', {
+    name: `${name}-NotificationRule`,
+    detailType: 'FULL',
+    eventTypeIds: [
+      'codepipeline-pipeline-pipeline-execution-succeeded',
+      'codepipeline-pipeline-pipeline-execution-failed',
+      'codepipeline-pipeline-pipeline-execution-canceled',
+      'codepipeline-pipeline-pipeline-execution-superseded',
+      'codepipeline-pipeline-pipeline-execution-resumed',
+    ],
+    resource: pipeline.pipelineArn,
+    targets: [
+      {
+        targetType: 'SNS',
+        targetAddress: getSnsTopicFormatPipelineFromSsmParameterStore(scope),
+      },
+    ],
   });
 }
