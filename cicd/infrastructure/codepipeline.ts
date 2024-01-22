@@ -9,7 +9,8 @@ import {
   getSnsTopicFormatPipelineFromSsmParameterStore,
 } from '../config/ssm';
 import config from 'config';
-import * as codestarnotifications from 'aws-cdk-lib/aws-codestarnotifications';
+import * as codestar_notifications from 'aws-cdk-lib/aws-codestarnotifications';
+import { Topic } from 'aws-cdk-lib/aws-sns';
 
 export function createCodePipeline(
   scope: Construct,
@@ -102,23 +103,22 @@ export function createCodePipeline(
     restartExecutionOnUpdate: true,
   });
 
-  // Create a CodeStar Notification Rule
-  new codestarnotifications.CfnNotificationRule(scope, 'MyNotificationRule', {
-    name: `${name}-NotificationRule`,
-    detailType: 'FULL',
-    eventTypeIds: [
+  // Notifications
+  new codestar_notifications.NotificationRule(scope, 'MyNotificationRule', {
+    source: pipeline,
+    events: [
       'codepipeline-pipeline-pipeline-execution-succeeded',
       'codepipeline-pipeline-pipeline-execution-failed',
       'codepipeline-pipeline-pipeline-execution-canceled',
       'codepipeline-pipeline-pipeline-execution-superseded',
       'codepipeline-pipeline-pipeline-execution-resumed',
     ],
-    resource: pipeline.pipelineArn,
     targets: [
-      {
-        targetType: 'SNS',
-        targetAddress: getSnsTopicFormatPipelineFromSsmParameterStore(scope),
-      },
+      Topic.fromTopicArn(
+        scope,
+        'mySnsTopic',
+        getSnsTopicFormatPipelineFromSsmParameterStore(scope),
+      ),
     ],
   });
 }
