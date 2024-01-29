@@ -135,6 +135,8 @@ export function createResourcePolicy(): iam.PolicyDocument {
             'aws:Referer': [
               'https://www.playingaws.com',
               'https://www.playingaws.com/*',
+              'https://playingaws.com',
+              'https://playingaws.com/*',
             ],
           },
         },
