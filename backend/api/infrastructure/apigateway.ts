@@ -114,7 +114,7 @@ export function createResourcePolicy(): iam.PolicyDocument {
         actions: ['execute-api:Invoke'],
         resources: ['execute-api:/*/*/*'],
         conditions: {
-          StringLike: {
+          StringNotLike: {
             'aws:Referer': [
               'https://www.playingaws.com',
               'https://www.playingaws.com/*',
