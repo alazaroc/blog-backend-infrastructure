@@ -24,11 +24,8 @@ export class BlogInfrastructureStack extends Stack {
   public constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // Set custom tags
-    if (props?.tags) {
-      for (const [key, value] of Object.entries(props.tags))
-        Tags.of(this).add(key, value);
-    }
+    // Add tags
+    this.addTags(props?.tags);
 
     // const accountRegion = this.region;
     // const accountNumber = this.account;
@@ -85,5 +82,13 @@ export class BlogInfrastructureStack extends Stack {
     apiRestPublicNetwork.domainName?.addBasePathMapping(apiRestPublicNetwork);
     addContactResource(apiRestPublicNetwork, lambdaContact);
     addSubscriptionResource(apiRestPublicNetwork, lambdaSubscription);
+  }
+
+  private addTags(tags?: { [key: string]: string }) {
+    if (tags) {
+      for (const [key, value] of Object.entries(tags)) {
+        Tags.of(this).add(key, value);
+      }
+    }
   }
 }
