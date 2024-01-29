@@ -23,3 +23,17 @@ export function getSsmBlogCertificateArn(scope: Construct): string {
   );
   return blogCertificateArnValue;
 }
+
+// Set SSM parameter
+export function setSsmParameter(
+  scope: Construct,
+  parameterName: string,
+  parameterValue: string,
+  description: string,
+): void {
+  new ssm.StringParameter(scope, parameterName, {
+    parameterName: parameterName,
+    stringValue: parameterValue,
+    description: description,
+  });
+}

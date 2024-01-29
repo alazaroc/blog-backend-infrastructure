@@ -8,7 +8,7 @@ resources:
     gitHubRepository: /general/codestar/github-connect
     snsFinalNotifications: /general/sns/final-notifications
     snsFormatPipeline: /general/sns/format-codepipeline
-    blogCertificateArn: /blog/certificate-arn
+    blogCertificateArn: /blog/acm/certificate-arn
   lambda:
     contact:
       memorySize: 128

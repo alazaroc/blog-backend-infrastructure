@@ -8,10 +8,12 @@ import {
 } from 'aws-cdk-lib';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import config from 'config';
+import { setSsmParameter } from '../../config/ssm';
 
 export function createPublicApiGateway(
   scope: Construct,
   cert: acm.ICertificate,
+  region: string,
 ): apigateway.RestApi {
   const apiName = `${config.get('name')}`;
   const apiRest = new apigateway.RestApi(scope, apiName + '-api', {
@@ -44,6 +46,15 @@ export function createPublicApiGateway(
   });
   // Create Route53 record for API Custom Domain
   createRoute53Record(scope, apiRest);
+
+  // setSsmParameter
+  setSsmParameter(
+    scope,
+    '/blog/apigateway/url',
+    `${apiRest.restApiId}.execute-api.${region}.amazonaws.com`,
+    'API Gateway endpoint',
+  );
+
   return apiRest;
 }
 

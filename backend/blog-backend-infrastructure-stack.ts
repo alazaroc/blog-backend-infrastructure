@@ -28,7 +28,7 @@ export class BlogInfrastructureStack extends Stack {
     // Add tags
     this.addTags(props?.tags);
 
-    // const accountRegion = this.region;
+    const accountRegion = this.region;
     // const accountNumber = this.account;
 
     // DynamoDB tables
@@ -79,7 +79,11 @@ export class BlogInfrastructureStack extends Stack {
     const certificate = loadCertificateResource(this);
 
     // API Gateway
-    const apiRestPublicNetwork = createPublicApiGateway(this, certificate);
+    const apiRestPublicNetwork = createPublicApiGateway(
+      this,
+      certificate,
+      accountRegion,
+    );
     apiRestPublicNetwork.domainName?.addBasePathMapping(apiRestPublicNetwork);
     const apiResource = addApiResource(apiRestPublicNetwork);
     addContactResource(apiResource, lambdaContact);

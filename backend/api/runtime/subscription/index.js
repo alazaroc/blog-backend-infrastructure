@@ -33,7 +33,7 @@ function getSubscriptionItem(formData) {
 }
 
 // TODO: duplicated method in other lambda
-function getResponseHandler() {
+function setResponseHandler() {
   return {
     statusCode: 200,
     headers: {
@@ -68,7 +68,7 @@ handler = async (event) => {
     const formData = JSON.parse(event.body);
     validateInput(formData);
     await addSubscriptionToDB(formData);
-    return getResponseHandler();
+    return setResponseHandler();
   } catch (err) {
     console.log('error', err);
     return { statusCode: 400, body: JSON.stringify({ message: err.message }) };
@@ -83,5 +83,5 @@ module.exports = {
   handler,
   validateInput,
   getSubscriptionItem,
-  getResponseHandler,
+  setResponseHandler,
 };

@@ -63,7 +63,7 @@ function getEmailMessageItem(formData, type) {
 }
 
 // TODO: duplicated method in other lambda
-function getResponseHandler() {
+function setResponseHandler() {
   return {
     statusCode: 200,
     headers: {
@@ -100,6 +100,20 @@ async function sendEmailUsingSES(formData) {
   }
 }
 
+// Main method in the lambda function
+// Inputs
+// event: An object that represents the event that triggered the Lambda function. It contains the request body, which is expected to be a JSON string.
+// Flow
+// 1. The function logs the request body.
+// 2. The request body is parsed into a JavaScript object.
+// 3. The validateInput function is called to validate the input data.
+// 4. The addContactToDB function is called to add the contact information to a database.
+// 5. The sendEmailUsingSES function is called to send an email using Amazon SES.
+// 6. If no errors occur, the setResponseHandler function is called to return a success response.
+// 7. If any errors occur, they are caught and a response with an error message is returned.
+// Outputs
+// Success response: An object with a status code of 200, headers indicating the content type and access control settings, and a body containing a success message.
+// Error response: An object with a status code of 400 and a body containing an error message.
 handler = async (event) => {
   console.log('request: ', event.body);
   try {
@@ -107,7 +121,7 @@ handler = async (event) => {
     validateInput(formData);
     await addContactToDB(formData);
     await sendEmailUsingSES(formData);
-    return getResponseHandler();
+    return setResponseHandler();
   } catch (err) {
     console.log('error', err);
     return { statusCode: 400, body: JSON.stringify({ message: err.message }) };
@@ -123,5 +137,20 @@ module.exports = {
   validateInput,
   getContactItem,
   getEmailMessageItem,
-  getResponseHandler,
+  setResponseHandler,
 };
+
+// // Extract handler function
+// const handleRequest = async (req, res) => {
+
+//   // Request handling logic
+
+//   return res.json({
+//     message: 'Request handled'
+//   });
+// }
+
+// // Export handler
+// module.exports = {
+//   handler: handleRequest
+// }
