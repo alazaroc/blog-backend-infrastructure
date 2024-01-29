@@ -17,11 +17,11 @@ export function createPublicApiGateway(
   const apiRest = new apigateway.RestApi(scope, apiName + '-api', {
     restApiName: apiName,
     description: 'API REST of blog',
-    defaultCorsPreflightOptions: {
-      allowOrigins: apigateway.Cors.ALL_ORIGINS,
-      allowMethods: apigateway.Cors.ALL_METHODS,
-      // allowMethods: ['POST'],
-    },
+    // defaultCorsPreflightOptions: {
+    //   allowOrigins: apigateway.Cors.ALL_ORIGINS,
+    //   allowMethods: apigateway.Cors.ALL_METHODS,
+    //   // allowMethods: ['POST'],
+    // },
     retainDeployments: true,
     deployOptions: {
       stageName: `${config.get('environment')}`, // default "prod"
@@ -47,11 +47,17 @@ export function createPublicApiGateway(
   return apiRest;
 }
 
-export function addContactResource(
+export function addApiResource(
   apiRest: apigateway.IRestApi,
+): apigateway.Resource {
+  return apiRest.root.addResource('api');
+}
+
+export function addContactResource(
+  apiResource: apigateway.Resource,
   lambdaContact: lambda.Function,
 ): void {
-  const contact = apiRest.root.addResource('contact');
+  const contact = apiResource.addResource('contact');
   const lambdaIntegration = new apigateway.LambdaIntegration(lambdaContact, {
     proxy: true,
   });
@@ -65,10 +71,10 @@ export function addContactResource(
 }
 
 export function addSubscriptionResource(
-  apiRest: apigateway.IRestApi,
+  apiResource: apigateway.Resource,
   lambdaSubscription: lambda.Function,
 ): void {
-  const subscriptionForm = apiRest.root.addResource('subscription');
+  const subscriptionForm = apiResource.addResource('subscription');
   const lambdaIntegration = new apigateway.LambdaIntegration(
     lambdaSubscription,
     {

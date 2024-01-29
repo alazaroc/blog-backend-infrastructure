@@ -1,5 +1,6 @@
 import { App, Stack, StackProps, Tags } from 'aws-cdk-lib';
 import {
+  addApiResource,
   addContactResource,
   addSubscriptionResource,
   createPublicApiGateway,
@@ -80,8 +81,9 @@ export class BlogInfrastructureStack extends Stack {
     // API Gateway
     const apiRestPublicNetwork = createPublicApiGateway(this, certificate);
     apiRestPublicNetwork.domainName?.addBasePathMapping(apiRestPublicNetwork);
-    addContactResource(apiRestPublicNetwork, lambdaContact);
-    addSubscriptionResource(apiRestPublicNetwork, lambdaSubscription);
+    const apiResource = addApiResource(apiRestPublicNetwork);
+    addContactResource(apiResource, lambdaContact);
+    addSubscriptionResource(apiResource, lambdaSubscription);
   }
 
   private addTags(tags?: { [key: string]: string }) {
