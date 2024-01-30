@@ -13,6 +13,7 @@ export function createTableSubscriptions(scope: Construct): dynamodb.Table {
       type: dynamodb.AttributeType.STRING,
     },
     pointInTimeRecovery: true,
+    stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
   });
   return table;
 }
@@ -32,6 +33,7 @@ export function createTableContact(scope: Construct): dynamodb.Table {
       type: dynamodb.AttributeType.STRING,
     },
     pointInTimeRecovery: true,
+    stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
   });
   return table;
 }
