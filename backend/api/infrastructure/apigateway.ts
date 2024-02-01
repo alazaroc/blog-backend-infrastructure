@@ -49,11 +49,26 @@ export function createPublicApiGateway(
   // createRoute53Record(scope, apiRest);
 
   // setSsmParameter
-  setSsmParameter(
-    scope,
-    '/blog/apigateway/url',
-    `${apiRest.restApiId}.execute-api.${region}.amazonaws.com`,
-    'API Gateway endpoint',
+  const parameterName = '/blog/apigateway/url';
+  const value = `${apiRest.restApiId}.execute-api.${region}.amazonaws.com`;
+  const description = 'API Gateway endpoint';
+  setSsmParameter(scope, parameterName, value, description);
+
+  // Add generic errors
+  const genericErrorMessage = 'An error occurred. Please review your request.';
+  addGatewayResponse(
+    apiRest,
+    'default4xxResponse',
+    apigateway.ResponseType.DEFAULT_4XX,
+    '400',
+    genericErrorMessage,
+  );
+  addGatewayResponse(
+    apiRest,
+    'default5xxResponse',
+    apigateway.ResponseType.DEFAULT_5XX,
+    '400', // Server error will send also a 400 code error to obfuscate information to anyone
+    genericErrorMessage,
   );
 
   return apiRest;
@@ -119,7 +134,7 @@ export function addSubscriptionResource(
 // }
 
 // add resource policy for the api gateway
-export function createResourcePolicy(): iam.PolicyDocument {
+function createResourcePolicy(): iam.PolicyDocument {
   return new iam.PolicyDocument({
     statements: [
       new iam.PolicyStatement({
@@ -144,5 +159,25 @@ export function createResourcePolicy(): iam.PolicyDocument {
         },
       }),
     ],
+  });
+}
+
+function addGatewayResponse(
+  apiRest: apigateway.RestApi,
+  name: string,
+  type: apigateway.ResponseType,
+  statusCode: string,
+  message: string,
+) {
+  apiRest.addGatewayResponse(name, {
+    type,
+    statusCode: statusCode,
+    // responseHeaders: {
+    //   'Content-Type': 'application/json',
+    //   'Access-Control-Allow-Origin': '*', // Adjust CORS if needed
+    // },
+    templates: {
+      'application/json': `{"message":"${message}"}`,
+    },
   });
 }
