@@ -18,7 +18,6 @@ import {
 } from './database/dynamodb';
 import { createLambdaSubscription } from './api/infrastructure/subscription/lambda';
 import { createRoleToLambdaSubscription } from './api/infrastructure/subscription/role';
-import { loadCertificateResource } from './api/infrastructure/acm';
 import { retrieveTopicMyNotification } from './monitoring/sns';
 
 export class BlogInfrastructureStack extends Stack {
@@ -76,12 +75,12 @@ export class BlogInfrastructureStack extends Stack {
     createDashboardOfLambdas(this, lambdas);
 
     // Create certificate
-    const certificate = loadCertificateResource(this);
+    // const certificate = loadCertificateResource(this);
 
     // API Gateway
     const apiRestPublicNetwork = createPublicApiGateway(
       this,
-      certificate,
+      // certificate,
       accountRegion,
     );
     apiRestPublicNetwork.domainName?.addBasePathMapping(apiRestPublicNetwork);

@@ -2,23 +2,23 @@ import { Construct } from 'constructs';
 import {
   aws_apigateway as apigateway,
   aws_lambda as lambda,
-  aws_certificatemanager as acm,
-  aws_route53 as route53,
+  // aws_certificatemanager as acm,
   aws_iam as iam,
 } from 'aws-cdk-lib';
-import * as targets from 'aws-cdk-lib/aws-route53-targets';
+// import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import config from 'config';
 import { setSsmParameter } from '../../config/ssm';
 
 export function createPublicApiGateway(
   scope: Construct,
-  cert: acm.ICertificate,
+  // cert: acm.ICertificate,
   region: string,
 ): apigateway.RestApi {
   const apiName = `${config.get('name')}`;
   const apiRest = new apigateway.RestApi(scope, apiName + '-api', {
     restApiName: apiName,
     description: 'API REST of blog',
+    // Remove CORS because now the API Gateway will be exposed through CloudFront
     // defaultCorsPreflightOptions: {
     //   allowOrigins: apigateway.Cors.ALL_ORIGINS,
     //   allowMethods: apigateway.Cors.ALL_METHODS,
@@ -35,17 +35,18 @@ export function createPublicApiGateway(
       cachingEnabled: false, // 14.88 $ per month
       cacheDataEncrypted: false,
     },
-    domainName: {
-      domainName: 'api.playingaws.com',
-      certificate: cert,
-      endpointType: apigateway.EndpointType.EDGE, // default is REGIONAL
-      securityPolicy: apigateway.SecurityPolicy.TLS_1_2,
-      basePath: '*',
-    },
+    // Removed because now the API Gateway will be exposed through CloudFront
+    // domainName: {
+    //   domainName: 'api.playingaws.com',
+    //   certificate: cert,
+    //   endpointType: apigateway.EndpointType.EDGE, // default is REGIONAL
+    //   securityPolicy: apigateway.SecurityPolicy.TLS_1_2,
+    //   basePath: '*',
+    // },
     policy: createResourcePolicy(),
   });
   // Create Route53 record for API Custom Domain
-  createRoute53Record(scope, apiRest);
+  // createRoute53Record(scope, apiRest);
 
   // setSsmParameter
   setSsmParameter(
@@ -101,20 +102,21 @@ export function addSubscriptionResource(
   });
 }
 
-export function createRoute53Record(
-  scope: Construct,
-  api: apigateway.RestApi,
-): void {
-  const myHostedZone = route53.HostedZone.fromLookup(scope, 'MyZone', {
-    domainName: 'playingaws.com',
-  });
-  const name = `${config.get('environment')}-api`;
-  new route53.ARecord(scope, name, {
-    zone: myHostedZone,
-    recordName: 'api',
-    target: route53.RecordTarget.fromAlias(new targets.ApiGateway(api)),
-  });
-}
+// Removed because now the API Gateway will be exposed through CloudFront
+// export function createRoute53Record(
+//   scope: Construct,
+//   api: apigateway.RestApi,
+// ): void {
+//   const myHostedZone = route53.HostedZone.fromLookup(scope, 'MyZone', {
+//     domainName: 'playingaws.com',
+//   });
+//   const name = `${config.get('environment')}-api`;
+//   new route53.ARecord(scope, name, {
+//     zone: myHostedZone,
+//     recordName: 'api',
+//     target: route53.RecordTarget.fromAlias(new targets.ApiGateway(api)),
+//   });
+// }
 
 // add resource policy for the api gateway
 export function createResourcePolicy(): iam.PolicyDocument {
