@@ -145,7 +145,10 @@ export function addStepFunctionsContactResource(
       credentialsRole: stepFunctionsRole,
       integrationResponses: [
         {
-          statusCode: '200', // Define your integration response
+          statusCode: '200',
+          responseTemplates: {
+            'application/json': '{"message": "Success"}',
+          },
         },
       ],
       requestTemplates: {
