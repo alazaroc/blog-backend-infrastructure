@@ -9,6 +9,7 @@ resources:
     snsFinalNotifications: /general/sns/final-notifications
     snsFormatPipeline: /general/sns/format-codepipeline
     blogCertificateArn: /blog/acm/certificate-arn
+    stepFunctionsArn: /blog/step-functions/contact/arn
   lambda:
     contact:
       memorySize: 128

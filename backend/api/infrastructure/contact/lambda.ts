@@ -7,7 +7,7 @@ import {
   aws_logs as logs,
 } from 'aws-cdk-lib';
 import config from 'config';
-import { getSsmPersonalEmail } from '../../../../backend/config/ssm';
+import { getSsmParameter } from '../../../../backend/config/ssm';
 import { Tracing } from 'aws-cdk-lib/aws-lambda';
 
 export function createLambdaContact(
@@ -33,7 +33,7 @@ export function createLambdaContact(
     ),
     handler: 'index.handler',
     environment: {
-      EMAIL: getSsmPersonalEmail(scope),
+      EMAIL: getSsmParameter(scope, 'resources.ssm.personalEmail'),
       TABLE_CONTACT: contactTable.tableName,
     },
     logRetention: logs.RetentionDays.INFINITE,

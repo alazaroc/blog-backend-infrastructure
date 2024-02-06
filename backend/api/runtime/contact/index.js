@@ -104,13 +104,11 @@ async function sendEmailUsingSES(formData) {
 // Inputs
 // event: An object that represents the event that triggered the Lambda function. It contains the request body, which is expected to be a JSON string.
 // Flow
-// 1. The function logs the request body.
-// 2. The request body is parsed into a JavaScript object.
-// 3. The validateInput function is called to validate the input data.
-// 4. The addContactToDB function is called to add the contact information to a database.
-// 5. The sendEmailUsingSES function is called to send an email using Amazon SES.
-// 6. If no errors occur, the setResponseHandler function is called to return a success response.
-// 7. If any errors occur, they are caught and a response with an error message is returned.
+// 1. The validateInput function is called to validate the input data.
+// 2. The addContactToDB function is called to add the contact information to a database.
+// 3. The sendEmailUsingSES function is called to send an email using Amazon SES.
+// 4. If no errors occur, the setResponseHandler function is called to return a success response.
+// 4. If any errors occur, they are caught and a response with an error message is returned.
 // Outputs
 // Success response: An object with a status code of 200, headers indicating the content type and access control settings, and a body containing a success message.
 // Error response: An object with a status code of 400 and a body containing an error message.

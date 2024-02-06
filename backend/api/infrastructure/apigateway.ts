@@ -7,7 +7,7 @@ import {
 } from 'aws-cdk-lib';
 // import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import config from 'config';
-import { setSsmParameter } from '../../config/ssm';
+import { getSsmParameter, setSsmParameter } from '../../config/ssm';
 
 export function createPublicApiGateway(
   scope: Construct,
@@ -80,7 +80,7 @@ export function addApiResource(
   return apiRest.root.addResource('api');
 }
 
-export function addContactResource(
+export function addLambdaContactResource(
   apiResource: apigateway.Resource,
   lambdaContact: lambda.Function,
 ): void {
@@ -97,7 +97,7 @@ export function addContactResource(
   });
 }
 
-export function addSubscriptionResource(
+export function addLambdaSubscriptionResource(
   apiResource: apigateway.Resource,
   lambdaSubscription: lambda.Function,
 ): void {
@@ -114,6 +114,54 @@ export function addSubscriptionResource(
         statusCode: '200',
       },
     ],
+  });
+}
+
+export function addStepFunctionsContactResource(
+  scope: Construct,
+  apiResource: apigateway.Resource,
+): void {
+  const stepFunctionsArn = getSsmParameter(
+    scope,
+    'resources.ssm.stepFunctionsArn',
+  );
+  // IAM role that API Gateway will assume to invoke Step Functions
+  const stepFunctionsRole = new iam.Role(scope, 'StepFunctionsExecutionRole', {
+    assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+  });
+  stepFunctionsRole.addToPolicy(
+    new iam.PolicyStatement({
+      actions: ['states:StartExecution'],
+      resources: [stepFunctionsArn], // Replace with your actual Step Functions ARN
+    }),
+  );
+
+  // Define the HTTP integration
+  const stepFunctionsIntegration = new apigateway.AwsIntegration({
+    service: 'states',
+    action: 'StartExecution', // Action to start execution of the state machine
+    integrationHttpMethod: 'POST', // The integration HTTP method must be POST for actions
+    options: {
+      credentialsRole: stepFunctionsRole,
+      integrationResponses: [
+        {
+          statusCode: '200', // Define your integration response
+        },
+      ],
+      requestTemplates: {
+        'application/json': JSON.stringify({
+          stateMachineArn: stepFunctionsArn, // Use the actual ARN of your state machine
+          input: "$util.escapeJavaScript($input.json('$'))", // Pass the entire request body as input to the state machine
+          // Add any additional parameters required by the StartExecution API
+        }),
+      },
+    },
+  });
+
+  // Add a method to the resource that uses the integration
+  const contactForm = apiResource.addResource('contact');
+  contactForm.addMethod('POST', stepFunctionsIntegration, {
+    methodResponses: [{ statusCode: '200' }],
   });
 }
 
