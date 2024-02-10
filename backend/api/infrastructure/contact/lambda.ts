@@ -23,7 +23,7 @@ export function createLambdaContact(
   const handler = new lambda.Function(scope, lambdaName + '-lbd', {
     functionName: lambdaName,
     description: 'Blog contact process',
-    runtime: lambda.Runtime.NODEJS_18_X,
+    runtime: lambda.Runtime.NODEJS_20_X,
     memorySize: memorySize,
     timeout: Duration.seconds(30),
     role: customRole,

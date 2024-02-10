@@ -9,13 +9,14 @@ resources:
     snsFinalNotifications: /general/sns/final-notifications
     snsFormatPipeline: /general/sns/format-codepipeline
     blogCertificateArn: /blog/acm/certificate-arn
-    stepFunctionsArn: /blog/step-functions/contact/arn
+    contactStepFunctionsArn: /blog/step-functions/contact/arn
+    feedbackStepFunctionsArn: /blog/step-functions/feedback/arn
   lambda:
     contact:
       memorySize: 128
     subscription:
       memorySize: 128
-    comment:
+    feedback:
       memorySize: 128
   s3:
     cicd: codepipeline-artifact

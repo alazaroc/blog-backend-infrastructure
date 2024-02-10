@@ -29,6 +29,7 @@ function getSubscriptionItem(formData) {
     email: { S: formData.email },
     id: { S: crypto.randomUUID() },
     subscription_date: { S: new Date().toISOString() },
+    state: { S: 'active' },
   };
 }
 

@@ -21,7 +21,7 @@ export function createLambdaSubscription(
   const handler = new lambda.Function(scope, lambdaName + '-lbd', {
     functionName: lambdaName,
     description: 'Blog subscription process',
-    runtime: lambda.Runtime.NODEJS_18_X,
+    runtime: lambda.Runtime.NODEJS_20_X,
     memorySize: memorySize,
     timeout: Duration.seconds(30),
     role: customRole,

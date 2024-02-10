@@ -121,18 +121,22 @@ export function addStepFunctionsContactResource(
   scope: Construct,
   apiResource: apigateway.Resource,
 ): void {
-  const stepFunctionsArn = getSsmParameter(
+  const contactStepFunctionsArn = getSsmParameter(
     scope,
-    'resources.ssm.stepFunctionsArn',
+    'resources.ssm.contactStepFunctionsArn',
   );
   // IAM role that API Gateway will assume to invoke Step Functions
-  const stepFunctionsRole = new iam.Role(scope, 'StepFunctionsExecutionRole', {
-    assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
-  });
+  const stepFunctionsRole = new iam.Role(
+    scope,
+    'ContactStepFunctionsExecutionRole',
+    {
+      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+    },
+  );
   stepFunctionsRole.addToPolicy(
     new iam.PolicyStatement({
       actions: ['states:StartExecution'],
-      resources: [stepFunctionsArn], // Replace with your actual Step Functions ARN
+      resources: [contactStepFunctionsArn], // Replace with your actual Step Functions ARN
     }),
   );
 
@@ -153,7 +157,7 @@ export function addStepFunctionsContactResource(
       ],
       requestTemplates: {
         'application/json': JSON.stringify({
-          stateMachineArn: stepFunctionsArn, // Use the actual ARN of your state machine
+          stateMachineArn: contactStepFunctionsArn, // Use the actual ARN of your state machine
           input: "$util.escapeJavaScript($input.json('$'))", // Pass the entire request body as input to the state machine
           // Add any additional parameters required by the StartExecution API
         }),
@@ -164,6 +168,61 @@ export function addStepFunctionsContactResource(
   // Add a method to the resource that uses the integration
   const contactForm = apiResource.addResource('contact');
   contactForm.addMethod('POST', stepFunctionsIntegration, {
+    methodResponses: [{ statusCode: '200' }],
+  });
+}
+
+export function addStepFunctionsFeedbackResource(
+  scope: Construct,
+  apiResource: apigateway.Resource,
+): void {
+  const feedbackStepFunctionsArn = getSsmParameter(
+    scope,
+    'resources.ssm.feedbackStepFunctionsArn',
+  );
+  // IAM role that API Gateway will assume to invoke Step Functions
+  const stepFunctionsRole = new iam.Role(
+    scope,
+    'FeedbackStepFunctionsExecutionRole',
+    {
+      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+    },
+  );
+  stepFunctionsRole.addToPolicy(
+    new iam.PolicyStatement({
+      actions: ['states:StartExecution'],
+      resources: [feedbackStepFunctionsArn], // Replace with your actual Step Functions ARN
+    }),
+  );
+
+  // Define the HTTP integration
+  const stepFunctionsIntegration = new apigateway.AwsIntegration({
+    service: 'states',
+    action: 'StartExecution', // Action to start execution of the state machine
+    integrationHttpMethod: 'POST', // The integration HTTP method must be POST for actions
+    options: {
+      credentialsRole: stepFunctionsRole,
+      integrationResponses: [
+        {
+          statusCode: '200',
+          responseTemplates: {
+            'application/json': '{"message": "Success"}',
+          },
+        },
+      ],
+      requestTemplates: {
+        'application/json': JSON.stringify({
+          stateMachineArn: feedbackStepFunctionsArn, // Use the actual ARN of your state machine
+          input: "$util.escapeJavaScript($input.json('$'))", // Pass the entire request body as input to the state machine
+          // Add any additional parameters required by the StartExecution API
+        }),
+      },
+    },
+  });
+
+  // Add a method to the resource that uses the integration
+  const feedbackForm = apiResource.addResource('feedback');
+  feedbackForm.addMethod('POST', stepFunctionsIntegration, {
     methodResponses: [{ statusCode: '200' }],
   });
 }

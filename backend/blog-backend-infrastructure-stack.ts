@@ -4,6 +4,7 @@ import {
   addLambdaContactResource,
   addLambdaSubscriptionResource,
   addStepFunctionsContactResource,
+  addStepFunctionsFeedbackResource,
   createPublicApiGateway,
 } from './api/infrastructure/apigateway';
 import {
@@ -15,6 +16,7 @@ import { createPolicyToSesSendEmail } from './api/infrastructure/contact/policy'
 import { createRoleToLambdaContact } from './api/infrastructure/contact/role';
 import {
   createTableContact,
+  createTableFeedbackForm,
   createTableSubscriptions,
 } from './database/dynamodb';
 import { createLambdaSubscription } from './api/infrastructure/subscription/lambda';
@@ -34,6 +36,7 @@ export class BlogInfrastructureStack extends Stack {
     // DynamoDB tables
     const tableSubscriptions = createTableSubscriptions(this);
     const tableContact = createTableContact(this);
+    const tableFeedback = createTableFeedbackForm(this);
 
     // Create SNS topic to notify myself
     const topicMyNotification = retrieveTopicMyNotification(this);
@@ -91,6 +94,7 @@ export class BlogInfrastructureStack extends Stack {
     addLambdaSubscriptionResource(v1, lambdaSubscription);
     const v2 = apiResource.addResource('v2');
     addStepFunctionsContactResource(this, v2);
+    addStepFunctionsFeedbackResource(this, v2);
   }
 
   private addTags(tags?: { [key: string]: string }) {

@@ -37,3 +37,23 @@ export function createTableContact(scope: Construct): dynamodb.Table {
   });
   return table;
 }
+
+export function createTableFeedbackForm(scope: Construct): dynamodb.Table {
+  const tableName = `${config.get('name')}` + `-feedback`;
+  const table = new dynamodb.Table(scope, tableName + '-db', {
+    tableName: tableName,
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    removalPolicy: RemovalPolicy.RETAIN,
+    partitionKey: {
+      name: 'type',
+      type: dynamodb.AttributeType.STRING,
+    },
+    sortKey: {
+      name: 'date',
+      type: dynamodb.AttributeType.STRING,
+    },
+    pointInTimeRecovery: true,
+    stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+  });
+  return table;
+}
