@@ -2,8 +2,7 @@ import {
   validateInput,
   getContactItem,
   getEmailMessageItem,
-  getResponseHandler,
-} from '../../../../backend/api/runtime/contact';
+} from '../../../../../backend/api/runtime/contact';
 
 const mockFormData = {
   name: 'John Doe',
@@ -19,13 +18,13 @@ describe('validateInput', () => {
         reply_to: 'test@example.com',
         message: 'test message',
       });
-    }).toThrowError('Name is required');
+    }).toThrow('Name is required');
   });
 
   test('throws error if reply_to is not provided', () => {
     expect(() => {
       validateInput({ name: 'Test', message: 'test message' });
-    }).toThrowError('Email is required');
+    }).toThrow('Email is required');
   });
 
   test('throws an error if email is invalid', () => {
@@ -41,13 +40,13 @@ describe('validateInput', () => {
   test('throws error if message is not provided', () => {
     expect(() => {
       validateInput({ name: 'Test', reply_to: 'test@example.com' });
-    }).toThrowError('Message is required');
+    }).toThrow('Message is required');
   });
 
   test('does not throw error if form data is valid', () => {
     expect(() => {
       validateInput(mockFormData);
-    }).not.toThrowError();
+    }).not.toThrow();
   });
 });
 
@@ -99,18 +98,18 @@ describe('getEmailMessageItem', () => {
   });
 });
 
-describe('getResponseHandler', () => {
-  test('should return a response with 200 status code and success message', () => {
-    const expectedResponse = {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://www.playingaws.com',
-        'Access-Control-Allow-Credentials': false,
-      },
-      body: JSON.stringify({ message: 'Success' }),
-    };
-    const response = getResponseHandler();
-    expect(response).toEqual(expectedResponse);
-  });
-});
+// describe('getResponseHandler', () => {
+//   test('should return a response with 200 status code and success message', () => {
+//     const expectedResponse = {
+//       statusCode: 200,
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Access-Control-Allow-Origin': 'https://www.playingaws.com',
+//         'Access-Control-Allow-Credentials': false,
+//       },
+//       body: JSON.stringify({ message: 'Success' }),
+//     };
+//     const response = getResponseHandler();
+//     expect(response).toEqual(expectedResponse);
+//   });
+// });

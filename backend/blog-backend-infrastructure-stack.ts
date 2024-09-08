@@ -36,7 +36,7 @@ export class BlogInfrastructureStack extends Stack {
     // DynamoDB tables
     const tableSubscriptions = createTableSubscriptions(this);
     const tableContact = createTableContact(this);
-    const tableFeedback = createTableFeedbackForm(this);
+    createTableFeedbackForm(this);
 
     // Create SNS topic to notify myself
     const topicMyNotification = retrieveTopicMyNotification(this);

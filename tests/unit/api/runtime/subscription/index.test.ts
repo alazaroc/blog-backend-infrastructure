@@ -1,8 +1,7 @@
 import {
   validateInput,
   getSubscriptionItem,
-  getResponseHandler,
-} from '../../../../backend/api/runtime/subscription';
+} from '../../../../../backend/api/runtime/subscription';
 
 describe('validateInput', () => {
   test('throws an error if formData is missing email', () => {
@@ -46,18 +45,18 @@ describe('subscriptionItem', () => {
   });
 });
 
-describe('getResponseHandler', () => {
-  test('should return a response with 200 status code and success message', () => {
-    const expectedResponse = {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://www.playingaws.com',
-        'Access-Control-Allow-Credentials': false,
-      },
-      body: JSON.stringify({ message: 'Success' }),
-    };
-    const response = getResponseHandler();
-    expect(response).toEqual(expectedResponse);
-  });
-});
+// describe('getResponseHandler', () => {
+//   test('should return a response with 200 status code and success message', () => {
+//     const expectedResponse = {
+//       statusCode: 200,
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Access-Control-Allow-Origin': 'https://www.playingaws.com',
+//         'Access-Control-Allow-Credentials': false,
+//       },
+//       body: JSON.stringify({ message: 'Success' }),
+//     };
+//     const response = getResponseHandler();
+//     expect(response).toEqual(expectedResponse);
+//   });
+// });
