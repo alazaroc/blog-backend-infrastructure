@@ -49,6 +49,7 @@ export function createCodePipeline(
         build: {
           commands: [
             'npm ci',
+            'npm install -g aws-cdk@latest',
             'npx cdk deploy blog-backend-infrastructure --require-approval never',
           ],
         },
@@ -59,8 +60,8 @@ export function createCodePipeline(
     }),
     description: 'Build phase for blog-backend-infrastructure resources',
     environment: {
-      computeType: codebuild.ComputeType.SMALL,
-      buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_4,
+      computeType: codebuild.ComputeType.LAMBDA_1GB,
+      buildImage: codebuild.LinuxArmLambdaBuildImage.AMAZON_LINUX_2023_NODE_22,
     },
   });
   buildProject.addToRolePolicy(
@@ -89,6 +90,7 @@ export function createCodePipeline(
   // Create the pipeline
   const pipeline = new codepipeline.Pipeline(scope, name + '-pipeline', {
     pipelineName: name,
+    pipelineType: codepipeline.PipelineType.V2,
     stages: [
       {
         stageName: 'Source',
